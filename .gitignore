@@ -10,3 +10,6 @@
 .idea/
 # Project exclude paths
 /target/
+# Special files
+src/main/resources/*.properties
+src/main/resources/*.yml

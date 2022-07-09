@@ -1,47 +1,39 @@
 package com.github.astafex.springcourse.dao;
 
 import com.github.astafex.springcourse.model.Person;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class PersonDAO {
-    private static int PEOPLE_COUNT;
-    private final List<Person> people;
+    private final JdbcTemplate jdbcTemplate;
 
-    {
-        people = new ArrayList<>();
-        people.add(new Person(PEOPLE_COUNT++, "Tom", 29, "tomhan91@gmail.com"));
-        people.add(new Person(PEOPLE_COUNT++, "Bob", 19, "dur0a@yandex.ru"));
-        people.add(new Person(PEOPLE_COUNT++, "Mike", 32, "psnturkcom@yahoo.com"));
-        people.add(new Person(PEOPLE_COUNT++, "Katy", 41, "silveranal@mail.ru"));
+    @Autowired
+    public PersonDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Person> index() {
-        return people;
+        return jdbcTemplate.query("SELECT * FROM person", new BeanPropertyRowMapper<>(Person.class));
     }
 
     public Person show(int id) {
-        return people.stream()
-                .filter(person -> person.getId() == id)
-                .findAny().orElse(null);
+        return jdbcTemplate.query("SELECT * FROM person WHERE id=?", new BeanPropertyRowMapper<>(Person.class), id).stream().findAny().orElse(null);
     }
 
     public void save(Person person) {
-        person.setId(PEOPLE_COUNT++);
-        people.add(person);
+        jdbcTemplate.update("INSERT INTO person values(?,?,?,?)", 1, person.getName(), person.getAge(), person.getEmail());
     }
 
-    public void update(int id, Person updatePerson) {
-        Person person = people.get(id);
-        person.setName(updatePerson.getName());
-        person.setAge(updatePerson.getAge());
-        person.setEmail(updatePerson.getEmail());
+    public void update(int id, Person person) {
+        jdbcTemplate.update("UPDATE person SET name=?,age=?,email=? WHERE id=?", person.getName(), person.getAge(), person.getEmail(), id);
     }
 
     public void delete(int id) {
-        people.removeIf(person -> person.getId() == id);
+        jdbcTemplate.update("DELETE FROM person WHERE id=?", id);
     }
 }
