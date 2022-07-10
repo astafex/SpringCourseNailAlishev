@@ -1,6 +1,6 @@
 package com.github.astafex.springcourse.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,15 +23,10 @@ import java.util.Objects;
 @ComponentScan("com.github.astafex.springcourse")
 @PropertySource("classpath:database.properties")
 @EnableWebMvc
+@RequiredArgsConstructor
 public class SpringApplicationConfig implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
     private final Environment environment;
-
-    @Autowired
-    public SpringApplicationConfig(ApplicationContext applicationContext, Environment environment) {
-        this.applicationContext = applicationContext;
-        this.environment = environment;
-    }
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
