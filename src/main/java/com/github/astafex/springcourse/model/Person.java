@@ -4,16 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Person {
-
     private int id;
 
     @NotEmpty(message = "Name should not be empty!")
@@ -27,4 +23,8 @@ public class Person {
     @Size(min = 2, max = 50, message = "Name should be between 2 and 50 characters!")
     @Email
     private String email;
+
+    // Страна, Город, Индекс(6 цифр)
+    @Pattern(regexp = "")
+    private String address;
 }

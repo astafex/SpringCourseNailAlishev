@@ -22,6 +22,11 @@
         <p style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">error</p>
         <br>
 
+        <label for="address">Address</label>
+        <input type="text" th:field="*{address}" id="address">
+        <p style="color:red" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">error</p>
+        <br>
+
         <input type="submit" value="Add">
     </div>
 </form>
