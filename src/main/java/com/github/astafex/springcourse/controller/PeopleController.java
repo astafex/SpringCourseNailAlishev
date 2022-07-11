@@ -2,7 +2,8 @@ package com.github.astafex.springcourse.controller;
 
 import com.github.astafex.springcourse.dao.PersonDAO;
 import com.github.astafex.springcourse.model.Person;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.astafex.springcourse.util.PersonValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,13 +13,10 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
+@RequiredArgsConstructor
 public class PeopleController {
     private final PersonDAO personDAO;
-
-    @Autowired
-    public PeopleController(PersonDAO personDAO) {
-        this.personDAO = personDAO;
-    }
+    private final PersonValidator personValidator;
 
     @GetMapping()
     public String showAllPeople(Model model) {
@@ -39,6 +37,7 @@ public class PeopleController {
 
     @PostMapping()
     public String createPerson(@ModelAttribute("person") @Valid Person newPerson, BindingResult bindingResult) {
+        personValidator.validate(newPerson, bindingResult);
         if (bindingResult.hasErrors()) {
             return "/people/new";
         }
@@ -53,11 +52,12 @@ public class PeopleController {
     }
 
     @PatchMapping("/{id}")
-    public String updatePerson(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult, @PathVariable("id") int id) {
+    public String updatePerson(@ModelAttribute("person") @Valid Person updatePerson, BindingResult bindingResult, @PathVariable("id") int id) {
+        personValidator.validate(updatePerson, bindingResult);
         if (bindingResult.hasErrors()) {
             return "/people/edit";
         }
-        personDAO.update(id, person);
+        personDAO.update(id, updatePerson);
         return "redirect:/people";
     }
 
