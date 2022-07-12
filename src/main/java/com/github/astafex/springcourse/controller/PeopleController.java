@@ -53,7 +53,10 @@ public class PeopleController {
 
     @PatchMapping("/{id}")
     public String updatePerson(@ModelAttribute("person") @Valid Person updatePerson, BindingResult bindingResult, @PathVariable("id") int id) {
-        personValidator.validate(updatePerson, bindingResult);
+        Person beforePerson = personDAO.show(id);
+        if (!beforePerson.getEmail().equals(updatePerson.getEmail())) {
+            personValidator.validate(updatePerson, bindingResult);
+        }
         if (bindingResult.hasErrors()) {
             return "/people/edit";
         }

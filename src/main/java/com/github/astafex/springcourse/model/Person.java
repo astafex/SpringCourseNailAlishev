@@ -25,6 +25,6 @@ public class Person {
     private String email;
 
     // Страна, Город, Индекс(6 цифр)
-    @Pattern(regexp = "")
+    @Pattern(regexp = "^[A-Z][\\w \\-]+, [A-Z][\\w \\-]+, \\d{6}", message = "Your address should be in this format!")
     private String address;
 }
